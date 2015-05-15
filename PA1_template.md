@@ -1,9 +1,4 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
@@ -16,29 +11,29 @@ This script assumes that the data file, "activity.csv" is present and unzipped i
 ```r
 # Load libraries used in the script
 library(plyr)
+# Store the default graphical parameters in case we need them
+old.par <- par()
 
 # Read in the data file, specifying steps as a number, date as a factor, and interval as a factor
 data <- read.csv("activity.csv", header=T, colClasses = c("numeric", "factor", "factor"))
 ```
 
-```
-## Warning in file(file, "rt"): cannot open file 'activity.csv': No such file
-## or directory
-```
-
-```
-## Error in file(file, "rt"): cannot open the connection
-```
-
 ## What is mean total number of steps taken per day?
 
-Calculate the mean and median number of steps taken per day by summarizing the data using dplyr
+Calculate the mean and median number of steps taken per day by summarizing the data using dplyr, then use this data to display a histogram showing the toatl number of steps taken in a day. The mean number of steps taken is 10,766.19; the median number of steps taken is 10,765.
 
 
 ```r
 # Use plyr summarise function to sum the number of steps taken on each day
 daySteps <- ddply(data, c("date"), summarise, stepsPerDay = sum(steps))
 
+# Generate a histogram of the number of steps taken per day
+hist(daySteps$stepsPerDay, xlab="Total steps per day", ylab="Frequency", main="Total steps taken per day")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
+```r
 # Calculate the average steps per day, removing NAs
 meanStepsPerDay <- mean(daySteps$stepsPerDay, na.rm=T)
 medianStepsPerDay <- median(daySteps$stepsPerDay, na.rm=T)
@@ -75,7 +70,7 @@ intervalSteps$interval <- as.numeric(intervalSteps$interval)
 plot(as.numeric(intervalSteps$interval), intervalSteps$stepsPerInterval, type="l", pch=".", xlab="Five minute interval", ylab="Average number of steps per day", main="Average steps per day\nper 5-minute interval")
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
 
 ```r
 # Identify the interval that contains the maximum number of steps per interval
@@ -123,7 +118,7 @@ hist(daySteps$stepsPerDay, xlab="Total steps per day", main="Step Data\n(Origina
 hist(dayFilledSteps$stepsPerDay, xlab="Total steps per day", main="Step Data\n(Imputed)",  ylim=c(0,35))
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
 
 ```r
 # Print the values for comparison
@@ -182,4 +177,4 @@ plot(as.numeric(intervalStepsWeekend$interval), intervalStepsWeekend$stepsPerInt
 plot(as.numeric(intervalStepsWeekday$interval), intervalStepsWeekday$stepsPerInterval, xlab="Weekday intervals", ylab="Average number of steps", main="Weekday step averages", type="l")
 ```
 
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 

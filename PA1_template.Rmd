@@ -15,6 +15,8 @@ This script assumes that the data file, "activity.csv" is present and unzipped i
 ```{r}
 # Load libraries used in the script
 library(plyr)
+# Store the default graphical parameters in case we need them
+old.par <- par()
 
 # Read in the data file, specifying steps as a number, date as a factor, and interval as a factor
 data <- read.csv("activity.csv", header=T, colClasses = c("numeric", "factor", "factor"))
@@ -23,12 +25,15 @@ data <- read.csv("activity.csv", header=T, colClasses = c("numeric", "factor", "
 
 ## What is mean total number of steps taken per day?
 
-Calculate the mean and median number of steps taken per day by summarizing the data using dplyr
+Calculate the mean and median number of steps taken per day by summarizing the data using dplyr, then use this data to display a histogram showing the toatl number of steps taken in a day. The mean number of steps taken is 10,766.19; the median number of steps taken is 10,765.
 
 ```{r}
 
 # Use plyr summarise function to sum the number of steps taken on each day
 daySteps <- ddply(data, c("date"), summarise, stepsPerDay = sum(steps))
+
+# Generate a histogram of the number of steps taken per day
+hist(daySteps$stepsPerDay, xlab="Total steps per day", ylab="Frequency", main="Total steps taken per day")
 
 # Calculate the average steps per day, removing NAs
 meanStepsPerDay <- mean(daySteps$stepsPerDay, na.rm=T)
